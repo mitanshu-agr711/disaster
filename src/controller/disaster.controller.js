@@ -92,6 +92,7 @@ export const createDisaster = async (req, res, io) => {
           owner_id: user,
           created_at: new Date().toISOString(),
           audit_trail: audit,
+        
         },
       ])
       .select();
@@ -178,7 +179,6 @@ export const deleteDisaster = async (req, res) => {
     const { id } = req.params;
     const user = req.user.name;
 
-    // Fetch for audit trail
     const { data: current, error: fetchError } = await supabase
       .from("disasters")
       .select("audit_trail")
@@ -215,10 +215,13 @@ export const geography = async (req, res) => {
       disaster_id: id,
       lat: parseFloat(lat),
       lon: parseFloat(lon),
-      radius: 10000, // meters
+      radius: 10000, 
     });
 
-    if (error) return res.status(500).json({ error });
+    if (error) 
+      { console.log("geo",error)
+        return res.status(500).json({ error });
+      }
     req.app
       .get("io")
       .emit("resources_updated", { disasterId: id, resources: data });
