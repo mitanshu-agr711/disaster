@@ -1,6 +1,6 @@
 import { createBlueskySession, fetchDisasterNews } from '../services/mockSocialMedia.js';
 import { getCache, setCache } from '../services/cache.js';
-
+import scrapeOfficialUpdates from '../services/scrapingService.js';
 let blueskySession = null;
 let sessionExpiry = null;
 
@@ -108,18 +108,64 @@ const generateMockSocialMediaPosts = (disasterId) => {
 };
 
 
+
+
+
 export const getOfficialUpdates = async (req, res) => {
+  const { id } = req.params; 
+  
   try {
-    const { id } = req.params;
+    console.log(`Fetching official updates for disaster ID: ${id}`);
+    
     const cacheKey = `official_updates_${id}`;
     let updates = await getCache(cacheKey);
+    
     if (!updates) {
+      console.log('Cache miss, scraping fresh data...');
       updates = await scrapeOfficialUpdates(id);
       await setCache(cacheKey, updates, 3600);
+      console.log(`Cached ${updates.length} updates for disaster ${id}`);
+    } else {
+      console.log(`Cache hit, returning ${updates.length} cached updates`);
     }
-    res.json(updates);
+    
+    res.json({
+      disasterId: id,
+      totalUpdates: updates.length,
+      updates: updates,
+      timestamp: new Date().toISOString()
+    });
+    
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(`Error fetching official updates for disaster ID ${id}:`, err);
+    res.status(500).json({ 
+      error: err.message,
+      disasterId: id
+    });
   }
 };
 
+
+export const getOfficialUpdatesNoCache = async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    console.log(`Fetching official updates for disaster ID: ${id}`);
+    
+    const updates = await scrapeOfficialUpdates(id);
+    
+    res.json({
+      disasterId: id,
+      totalUpdates: updates.length,
+      updates: updates,
+      timestamp: new Date().toISOString()
+    });
+    
+  } catch (err) {
+    console.error(`Error fetching official updates for disaster ID ${id}:`, err);
+    res.status(500).json({ 
+      error: err.message,
+      disasterId: id
+    });
+  }
+};
