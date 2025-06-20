@@ -26,6 +26,6 @@
     "dev": "nodemon src/index.js"
   },
   "keywords": [],
-  "author": "",
-  "description": ""
+  "author": "mitanshu agrawal",
+  "description": "disaster management system for citizens"
 }
