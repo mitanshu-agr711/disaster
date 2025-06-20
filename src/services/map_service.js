@@ -2,19 +2,19 @@ import axios from 'axios';
 
 const geocode = async (placeName) => {
   try {
-    // console.log(`Attempting to geocode: "${placeName}"`);
+
     
     const response = await axios.get('https://nominatim.openstreetmap.org/search', {
       params: {
         q: placeName,
         format: 'json',
         limit: 1,
-        addressdetails: 1, // Get more detailed address info
+        addressdetails: 1,
       },
       headers: {
         'User-Agent': 'DisasterReliefApp/1.0 mishuagr2006@gmail.com',
       },
-      timeout: 10000, // 10 second timeout
+      timeout: 10000, 
     });
 
     // console.log(`Geocoding response for "${placeName}":`, response.data);

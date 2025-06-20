@@ -9,8 +9,8 @@ router.post('/createDisaster', auth('contributor'), (req, res) => {
 });
 
 router.get('/getDisasters', getDisasters);
-router.put('/:id', auth('admin'), updateDisaster);
-router.delete('/:id', auth('admin'), deleteDisaster);
+router.put('/update/:id', auth('admin'), updateDisaster);
+router.delete('/delete/:id', auth('admin'), deleteDisaster);
 router.get('/:id/social-media', getSocialMediaPosts);
 router.get('/:id/resources', geography);
 router.get('/:id/official-updates', getOfficialUpdates);

@@ -139,11 +139,12 @@ export const getDisasters = async (req, res) => {
 
 export const updateDisaster = async (req, res) => {
   try {
+
     const { id } = req.params;
     const updates = req.body;
     const user = req.user.name;
-
-    // Fetch current
+    console.log("Updating disaster with ID:", id, "Updates:", updates);
+  
     const { data: current, error: fetchError } = await supabase
       .from("disasters")
       .select("audit_trail")
@@ -152,7 +153,7 @@ export const updateDisaster = async (req, res) => {
     if (fetchError || !current)
       return res.status(404).json({ error: "Disaster not found" });
 
-    // Add audit log
+  
     const audit_trail = current.audit_trail || [];
     audit_trail.push(logAction("updated", user, updates.title || id));
 
@@ -167,6 +168,7 @@ export const updateDisaster = async (req, res) => {
     req.app.get("io").emit("disaster_updated", data);
     res.json(data);
   } catch (err) {
+    console.error("Update disaster error:", err);
     res.status(500).json({ error: err.message });
   }
 };

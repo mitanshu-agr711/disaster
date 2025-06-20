@@ -23,7 +23,7 @@ const extractLocation = async (description) => {
         }
       }
     );
-    
+
     const locationText = response.data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
     console.log(`Extracted location: "${locationText}"`);
     
@@ -36,11 +36,11 @@ const extractLocation = async (description) => {
   } catch (error) {
     console.error('Error extracting location:', error.response?.data || error.message);
     
-    // Fallback: try to extract location using simple regex patterns
+    
     const locationPatterns = [
-      /in\s+([A-Z][a-zA-Z\s]+(?:,\s*[A-Z]{2,})?)/i, // "in Manhattan, NYC"
-      /at\s+([A-Z][a-zA-Z\s]+(?:,\s*[A-Z]{2,})?)/i, // "at Central Park"
-      /([A-Z][a-zA-Z\s]+(?:,\s*[A-Z]{2,}))/g, // "Manhattan, NYC"
+      /in\s+([A-Z][a-zA-Z\s]+(?:,\s*[A-Z]{2,})?)/i,
+      /at\s+([A-Z][a-zA-Z\s]+(?:,\s*[A-Z]{2,})?)/i, 
+      /([A-Z][a-zA-Z\s]+(?:,\s*[A-Z]{2,}))/g, 
     ];
     
     for (const pattern of locationPatterns) {
